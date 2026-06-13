@@ -18,6 +18,9 @@
     --border:     rgba(201,168,76,0.25);
     --text:       #e8dfc8;
     --text-dim:   #8a7d60;
+    --glass-bg:   rgba(255,255,255,0.03);
+    --glass-border: rgba(201,168,76,0.18);
+    --glass-blur: blur(18px);
   }
 
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -30,6 +33,27 @@
     color: var(--text);
     line-height: 1.7;
     overflow-x: hidden;
+  }
+
+  /* deep bg orbs that give glass something to blur against */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+    opacity: .18;
+  }
+  body::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #c9a84c 0%, transparent 70%);
+    top: -180px; left: -120px;
+  }
+  body::after {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #7a6130 0%, transparent 70%);
+    bottom: -150px; right: -100px;
   }
 
   /* ── FIREFLIES ── */
@@ -57,9 +81,11 @@
     justify-content: center;
     align-items: center;
     padding: 1.2rem 2rem;
-    background: rgba(8,8,8,0.85);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(8,8,8,0.55);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    box-shadow: 0 1px 32px rgba(0,0,0,0.5);
   }
 
   .nav-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; justify-content: center; }
@@ -272,7 +298,9 @@
     border: 1px solid var(--gold-dim);
     border-radius: 2px;
     color: var(--gold-dim);
-    background: rgba(201,168,76,0.04);
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     transition: all .3s;
   }
   .skill-tag:hover { color: var(--gold-light); border-color: var(--gold-light); background: rgba(201,168,76,0.1); }
@@ -285,14 +313,17 @@
   }
 
   .card {
-    background: var(--black-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 12px;
     padding: 2rem 1.8rem;
     position: relative;
     overflow: hidden;
     cursor: default;
-    transition: border-color .3s, box-shadow .3s;
+    transition: border-color .3s, box-shadow .3s, background .3s;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
   }
   .card::before {
     content: '';
@@ -303,7 +334,7 @@
     opacity: 0;
     transition: opacity .3s;
   }
-  .card:hover { border-color: rgba(201,168,76,0.55); box-shadow: 0 16px 48px rgba(201,168,76,0.08); }
+  .card:hover { border-color: rgba(201,168,76,0.55); background: rgba(255,255,255,0.06); box-shadow: 0 16px 48px rgba(201,168,76,0.12), inset 0 1px 0 rgba(255,255,255,0.08); }
   .card:hover::before { opacity: 1; }
 
   .card-num {
@@ -336,15 +367,18 @@
 
   /* ── CONTACT ── */
   .contact-box {
-    background: var(--black-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px;
     padding: 3rem;
     max-width: 640px;
     margin: 0 auto;
     text-align: center;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
   }
   .contact-box::before {
     content: '';
@@ -374,10 +408,13 @@
     border: 1px solid var(--gold-dim);
     border-radius: 4px;
     color: var(--gold);
-    background: rgba(201,168,76,0.04);
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all .3s;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
   }
   .contact-btn::before {
     content: '';
@@ -404,8 +441,11 @@
     z-index: 1;
     text-align: center;
     padding: 3rem 2rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(201,168,76,0.12);
     color: var(--text-dim);
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
   footer .logo-f { font-family: 'Cinzel Decorative', cursive; font-size: 1.2rem; color: var(--gold-dim); margin-bottom: .5rem; }
   footer p { font-size: .8rem; letter-spacing: .08em; }
@@ -732,3 +772,4 @@
 })();
 </script>
 </body>
+</html>
