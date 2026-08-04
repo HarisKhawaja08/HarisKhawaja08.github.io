@@ -26,7 +26,7 @@ body{font-family:'Raleway',sans-serif;background:var(--black);color:var(--text);
 /* ── CURSOR ── */
 #cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen}
 #cursor-dot{width:6px;height:6px;background:var(--gold-light);border-radius:50%;position:fixed;transform:translate(-50%,-50%);transition:transform .1s;pointer-events:none;z-index:9999}
-#cursor-ring{width:36px;height:36px;border:1px solid rgba(201,168,76,0.5);border-radius:50%;position:fixed;transform:translate(-50%,-50%);transition:all .18s ease;pointer-events:none;z-index:9998;box-[...]
+#cursor-ring{width:36px;height:36px;border:1px solid rgba(201,168,76,0.5);border-radius:50%;position:fixed;transform:translate(-50%,-50%);transition:all .18s ease;pointer-events:none;z-index:9998;box-shadow:0 0 18px rgba(201,168,76,0.35)}
 body:hover #cursor-ring{opacity:1}
 
 /* ── LOADER ── */
@@ -90,7 +90,7 @@ h1 .name-accent{-webkit-text-fill-color:transparent}
 .events-meta{font-size:.75rem;color:var(--text-dim)}
 
 /* ── SCROLL HINT ── */
-.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--gold-dim);font-family:'Cinzel',serif;font-size:.72rem}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--gold-dim);font-family:'Cinzel',serif;font-size:.72rem;animation:bounce 2s ease-in-out infinite}
 .scroll-hint::after{content:'';width:1px;height:40px;background:linear-gradient(to bottom,var(--gold-dim),transparent)}
 @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
 
@@ -101,7 +101,75 @@ h1 .name-accent{-webkit-text-fill-color:transparent}
 .rule{width:60px;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:0 auto .8rem}
 .section-header p{color:var(--text-dim);font-size:.9rem}
 
-/* rest of CSS unchanged... (kept as in original file) */
+/* ── SECTION DIVIDER ── */
+.section-divider{display:flex;align-items:center;justify-content:center;gap:1.2rem;padding:2rem 1rem;position:relative;z-index:1;opacity:.55}
+.section-divider span{display:block;width:110px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim))}
+.section-divider span:last-child{background:linear-gradient(to left,transparent,var(--gold-dim))}
+.section-divider i{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);border:1px solid var(--gold-light)}
+
+/* ── REVEAL ── */
+.reveal{opacity:1;transform:none}
+.reveal.in{animation:revealUp .75s ease}
+@keyframes revealUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+
+/* ── SKILL BARS ── */
+.skills-bars{display:flex;flex-direction:column;gap:1.4rem}
+.skill-bar-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.45rem;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.skill-bar-label span:last-child{color:var(--gold-light)}
+.skill-bar-track{height:6px;background:rgba(201,168,76,0.08);border-radius:3px;overflow:hidden}
+.skill-bar-fill{width:0;height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold-light));border-radius:3px;transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
+
+/* ── GITHUB STATS ── */
+.github-stats{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap}
+.gh-stat{text-align:center;min-width:130px;padding:1.5rem 1.8rem;border:1px solid var(--border);border-radius:12px;background:var(--card-bg);backdrop-filter:blur(12px)}
+.gh-stat-val{display:block;font-family:'Cinzel Decorative',cursive;font-size:2rem;color:var(--gold-light);text-shadow:0 0 24px rgba(201,168,76,.35)}
+.gh-stat-label{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-top:.35rem}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:2.2rem;display:flex;flex-direction:column;gap:2.4rem}
+.timeline::before{content:'';position:absolute;left:4px;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,rgba(201,168,76,.55),rgba(201,168,76,.06))}
+.tl-item{position:relative}
+.tl-item::before{content:'';position:absolute;left:-2.2rem;top:6px;width:9px;height:9px;background:var(--black);border:1px solid var(--gold);transform:rotate(45deg)}
+.tl-year{font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem}
+.tl-title{font-family:'Cinzel',serif;font-size:1.08rem;color:var(--gold-light);letter-spacing:.04em;margin-bottom:.4rem}
+.tl-desc{color:var(--text-dim);font-size:.92rem}
+
+/* ── QUOTE ── */
+.quote-block{max-width:720px;margin:0 auto;padding:3rem 2rem;text-align:center;position:relative;z-index:1}
+.quote-mark{font-family:'Cinzel Decorative',cursive;font-size:4.5rem;line-height:.8;color:var(--gold-dim);opacity:.6;display:block;margin-bottom:1rem}
+.quote-text{font-family:'Cinzel',serif;font-size:clamp(1.15rem,3vw,1.5rem);color:var(--gold-light);letter-spacing:.03em;margin-bottom:.9rem}
+.quote-author{font-family:'Raleway',sans-serif;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim)}
+
+/* ── CARDS ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.6rem;max-width:920px;margin:0 auto}
+.card{position:relative;overflow:hidden;padding:2rem;border:1px solid var(--border);border-radius:14px;background:var(--card-bg);backdrop-filter:blur(14px);transition:box-shadow .3s ease,border-color .3s ease}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35;transition:opacity .3s}
+.card:hover{box-shadow:0 16px 44px rgba(201,168,76,.16);border-color:rgba(201,168,76,.5)}
+.card:hover::before{opacity:1}
+.card-num{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1.3rem}
+.card h3{font-family:'Cinzel',serif;font-size:1.25rem;color:var(--gold-light);letter-spacing:.05em;margin-bottom:.6rem}
+.card p{color:var(--text-dim);font-size:.92rem;margin-bottom:1.5rem}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid rgba(201,168,76,.1);padding-top:1.1rem}
+.card-tag{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:4px 11px;border:1px solid var(--gold-dim);border-radius:3px;color:var(--gold-dim)}
+.card-link{display:inline-flex;align-items:center;gap:.35rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-light);text-decoration:none;transition:color .3s,gap .3s}
+.card-link:hover{color:var(--gold);gap:.6rem}
+
+/* ── CONTACT ── */
+.contact-box{max-width:680px;margin:0 auto;padding:2.6rem 2rem;border:1px solid var(--border);border-radius:14px;background:var(--card-bg);backdrop-filter:blur(14px)}
+.contact-btns{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem}
+.contact-btn{display:inline-flex;align-items:center;gap:.6rem;padding:13px 22px;border:1px solid var(--gold-dim);border-radius:6px;color:var(--text-dim);text-decoration:none;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
+.contact-btn:hover{color:var(--gold-light);border-color:var(--gold-light);background:rgba(201,168,76,.08);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:1;padding:3rem 1rem 4rem;text-align:center;border-top:1px solid rgba(201,168,76,.12)}
+.logo-f{font-family:'Cinzel Decorative',cursive;font-size:1.35rem;color:var(--gold-light);margin-bottom:.7rem}
+footer p{color:var(--text-dim);font-size:.75rem;letter-spacing:.14em}
+
+/* ── BACK TO TOP ── */
+#back-top{position:fixed;right:1.6rem;bottom:1.6rem;z-index:200;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gold-dim);border-radius:50%;background:rgba(8,8,8,.7);backdrop-filter:blur(10px);color:var(--gold-light);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(14px);transition:all .35s ease}
+#back-top.show{opacity:1;visibility:visible;transform:none}
+#back-top:hover{border-color:var(--gold-light);box-shadow:0 0 22px rgba(201,168,76,.35)}
+
 /* ── ABOUT ── */
 .about-grid{display:grid;grid-template-columns:1fr 2fr;gap:3rem;align-items:center}
 .crest-ring{width:220px;height:220px;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center}
@@ -112,8 +180,6 @@ h1 .name-accent{-webkit-text-fill-color:transparent}
 .skills-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
 .skill-tag{font-family:'Cinzel',serif;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border:1px solid var(--gold-dim);border-radius:3px;color:var(--gold-dim);background:transparent}
 .skill-tag:hover{color:var(--gold-light);border-color:var(--gold-light);background:rgba(201,168,76,0.08)}
-
-/* ... rest of file CSS truncated for brevity in editor but committed fully below ... */
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){
@@ -134,6 +200,7 @@ h1 .name-accent{-webkit-text-fill-color:transparent}
   .btn-row{flex-direction:column;align-items:center}
   .btn{width:100%;max-width:260px;text-align:center}
   .timeline{padding-left:1.5rem}
+  .tl-item::before{left:-1.5rem}
   body{cursor:auto}
   #cursor-dot,#cursor-ring{display:none}
   .about-text{text-align:left}
