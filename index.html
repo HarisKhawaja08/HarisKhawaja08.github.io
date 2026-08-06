@@ -75,20 +75,6 @@ h1 .name-accent{-webkit-text-fill-color:transparent}
 .btn:hover::before{opacity:1}
 .btn-primary{background:linear-gradient(135deg,rgba(42,31,6,0.9),rgba(26,18,0,0.9));border-color:var(--gold)}
 
-/* ── EVENTS BOARD (new) ── */
-.events-outer{max-width:920px;margin:1.5rem auto;padding:1.25rem;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.015));border:1px solid rgba(201,168,76,0.08);backdrop-filter:blur(12px)}
-.events-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
-.events-header h3{font-family:'Cinzel',serif;color:var(--gold-light);letter-spacing:.08em;margin:0}
-.events-list{display:flex;flex-direction:column;gap:.8rem}
-.event-item{display:flex;gap:1rem;align-items:flex-start;padding:.9rem;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.04)}
-.event-date{min-width:82px;padding:.5rem .6rem;border-radius:8px;background:rgba(201,168,76,0.06);text-align:center;font-family:'Cinzel',serif;color:var(--gold-light)}
-.event-body{flex:1}
-.event-title{font-family:'Cinzel',serif;color:var(--gold-light);margin:0 0 .2rem}
-.event-desc{color:var(--text-dim);font-size:.92rem;margin:0}
-.event-empty{color:var(--text-dim);text-align:center;padding:1rem}
-.events-actions{display:flex;gap:.6rem;align-items:center}
-.events-meta{font-size:.75rem;color:var(--text-dim)}
-
 /* ── SCROLL HINT ── */
 .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--gold-dim);font-family:'Cinzel',serif;font-size:.72rem;animation:bounce 2s ease-in-out infinite}
 .scroll-hint::after{content:'';width:1px;height:40px;background:linear-gradient(to bottom,var(--gold-dim),transparent)}
@@ -204,8 +190,6 @@ footer p{color:var(--text-dim);font-size:.75rem;letter-spacing:.14em}
   body{cursor:auto}
   #cursor-dot,#cursor-ring{display:none}
   .about-text{text-align:left}
-  .events-outer{margin:1rem;}
-  .event-date{min-width:64px}
 }
 </style>
 </head>
@@ -254,28 +238,6 @@ footer p{color:var(--text-dim);font-size:.75rem;letter-spacing:.14em}
     </div>
   </div>
   <div class="scroll-hint">Scroll</div>
-</section>
-
-<!-- EVENTS BOARD (new) -->
-<div class="section-divider"><span></span><i></i><span></span></div>
-<section class="section" id="events">
-  <div class="section-header reveal">
-    <div class="rule"></div>
-    <h2>Announcements</h2>
-    <p>Latest events (from Google Calendar)</p>
-  </div>
-  <div class="events-outer reveal">
-    <div class="events-header">
-      <h3>Event Board</h3>
-      <div class="events-actions">
-        <div class="events-meta" id="events-meta">Loading…</div>
-        <a class="btn" id="events-refresh" style="padding:8px 14px; font-size:.8rem">Refresh</a>
-      </div>
-    </div>
-    <div class="events-list" id="events-list">
-      <div class="event-empty">No events found. Configure the Google Calendar API key and calendar ID in the script to display events.</div>
-    </div>
-  </div>
 </section>
 
 <!-- ABOUT -->
@@ -688,105 +650,6 @@ window.addEventListener('scroll',()=>{
   sections.forEach(s=>obs.observe(s));
 })();
 </script>
-
-<!-- EVENTS SCRIPT (uses Google Calendar public API) -->
-<script>
-/*
-  HOW TO CONFIGURE (quick):
-  1) Make your Google Calendar public or use a calendar you control and ensure events are visible.
-  2) Create an API key at Google Cloud Console (APIs & Services → Credentials) and enable the Google Calendar API.
-  3) Set the API_KEY and CALENDAR_ID below.
-     - CALENDAR_ID is often your email (user@gmail.com) or the calendar's id (looks like longstring@group.calendar.google.com).
-  4) Push this file to GitHub Pages. Events will be fetched client-side.
-
-  Note: Using a public API key in client-side code is fine for public calendars; do not store sensitive secrets here.
-*/
-
-const GC_API_KEY = 'YOUR_API_KEY_HERE'; // <-- replace with your Google API key
-const GC_CALENDAR_ID = 'YOUR_CALENDAR_ID_HERE'; // <-- replace with your calendar ID (public)
-const GC_MAX_RESULTS = 8;
-
-const eventsListEl = document.getElementById('events-list');
-const eventsMetaEl = document.getElementById('events-meta');
-const refreshBtn = document.getElementById('events-refresh');
-
-function isoNow(){ return (new Date()).toISOString(); }
-
-function formatDateRange(e){
-  // e.start / e.end may be date (all-day) or dateTime
-  const start = e.start.dateTime || e.start.date; // date if all-day
-  const end = e.end.dateTime || e.end.date;
-  const opts = { month:'short', day:'numeric' };
-  try{
-    if(e.start.date){ // all-day
-      const d = new Date(e.start.date);
-      return d.toLocaleDateString(undefined, opts);
-    }
-    const s = new Date(start);
-    const tOpts = { hour:'numeric', minute:'numeric' };
-    return s.toLocaleDateString(undefined, opts) + ' · ' + s.toLocaleTimeString(undefined, tOpts);
-  }catch(err){ return start; }
-}
-
-async function fetchCalendarEvents(){
-  if(!GC_API_KEY || GC_API_KEY.includes('YOUR_')){
-    eventsListEl.innerHTML = '<div class="event-empty">Event board not configured. Set GC_API_KEY and GC_CALENDAR_ID in the script.</div>';
-    eventsMetaEl.textContent = 'Config needed';
-    return;
-  }
-  if(!GC_CALENDAR_ID || GC_CALENDAR_ID.includes('YOUR_')){
-    eventsListEl.innerHTML = '<div class="event-empty">Event board not configured. Set GC_CALENDAR_ID in the script.</div>';
-    eventsMetaEl.textContent = 'Config needed';
-    return;
-  }
-
-  eventsMetaEl.textContent = 'Fetching events…';
-  const timeMin = encodeURIComponent(isoNow());
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GC_CALENDAR_ID)}/events?key=${GC_API_KEY}&timeMin=${timeMin}&singleEvents=true&orderBy=startTime&maxResults=${GC_MAX_RESULTS}`;
-  try{
-    const res = await fetch(url);
-    if(!res.ok){
-      const txt = await res.text();
-      throw new Error('HTTP '+res.status+': '+txt);
-    }
-    const data = await res.json();
-    renderEvents(data.items || []);
-    eventsMetaEl.textContent = `Showing ${Math.min((data.items||[]).length, GC_MAX_RESULTS)} upcoming`;
-  }catch(err){
-    console.error('Calendar fetch error', err);
-    eventsListEl.innerHTML = `<div class="event-empty">Could not load events: ${err.message}</div>`;
-    eventsMetaEl.textContent = 'Error';
-  }
-}
-
-function renderEvents(items){
-  if(!items || items.length===0){
-    eventsListEl.innerHTML = '<div class="event-empty">No upcoming events.</div>';
-    return;
-  }
-  const frag = document.createDocumentFragment();
-  items.forEach(it=>{
-    const d = document.createElement('div'); d.className='event-item';
-    const date = document.createElement('div'); date.className='event-date'; date.textContent = formatDateRange(it);
-    const body = document.createElement('div'); body.className='event-body';
-    const title = document.createElement('h4'); title.className='event-title'; title.textContent = it.summary || '(No title)';
-    const desc = document.createElement('p'); desc.className='event-desc'; desc.textContent = it.description || (it.location?('Location: '+it.location):'');
-    body.appendChild(title);
-    body.appendChild(desc);
-    d.appendChild(date);
-    d.appendChild(body);
-    frag.appendChild(d);
-  });
-  eventsListEl.innerHTML='';
-  eventsListEl.appendChild(frag);
-}
-
-refreshBtn.addEventListener('click',()=>{
-  fetchCalendarEvents();
-});
-
-// auto-fetch on load
-fetchCalendarEvents();
-</script>
 </body>
+
 </html>
