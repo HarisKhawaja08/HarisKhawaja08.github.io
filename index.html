@@ -138,6 +138,7 @@ footer{position:relative;z-index:2;text-align:center;padding:10px 20px 30px;font
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 <div id="hearts" aria-hidden="true"></div>
+<audio id="bg-music" src="birthday_song.mp3" autoplay loop preload="auto"></audio>
 
 <main>
   <section class="glass hero">
@@ -223,6 +224,16 @@ footer{position:relative;z-index:2;text-align:center;padding:10px 20px 30px;font
 <footer>Made with love by Haris ♥</footer>
 
 <script>
+var music=document.getElementById('bg-music');
+music.volume=0.6;
+function startMusic(){
+  var p=music.play();
+  if(p&&p.catch)p.catch(function(){});
+}
+startMusic();
+document.addEventListener('click',startMusic,{once:true});
+document.addEventListener('touchstart',startMusic,{once:true});
+document.addEventListener('keydown',startMusic,{once:true});
 var box=document.getElementById('hearts');
 function heart(){
   var h=document.createElement('div');
